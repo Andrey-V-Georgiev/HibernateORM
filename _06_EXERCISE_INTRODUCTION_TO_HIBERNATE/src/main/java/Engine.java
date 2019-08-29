@@ -1,8 +1,10 @@
 import entities.Address;
 import entities.Employee;
+import entities.Project;
 import entities.Town;
 
 import javax.persistence.EntityManager;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
 
@@ -20,8 +22,12 @@ class Engine implements Runnable {
         //this._04_EmployeesWithSalaryOver50000();
         //this._05_EmployeesFromDepartment();
         //this._06_AddAddressAndUpdateEmployee();
-
+        //this._07_AddressesWithEmployeeCount();
+        //this._08_GetEmployeeWithProject();
+        //this._09_FindLatest10Projects();
+        //this._10_getIncreaseSalaries();
     }
+
 
     private void _02_RemoveObjects() {
         this.em.getTransaction().begin();
@@ -67,8 +73,8 @@ class Engine implements Runnable {
         this.em.getTransaction().begin();
         List<Employee> employees = this.em
                 .createQuery("FROM Employee AS e " +
-                                 "WHERE e.department.name ='Research and Development' " +
-                                 "ORDER BY e.salary, e.id",
+                                "WHERE e.department.name ='Research and Development' " +
+                                "ORDER BY e.salary, e.id",
                         Employee.class)
                 .getResultList();
         employees.forEach(e -> System.out.printf("%s %s from %s - $%.2f\n",
@@ -105,5 +111,100 @@ class Engine implements Runnable {
 
     }
 
+    private void _07_AddressesWithEmployeeCount() {
+        this.em.getTransaction().begin();
+        List<Address> addresses = this.em
+                .createQuery("FROM Address AS a " +
+                                "ORDER BY SIZE(a.employees) DESC, a.town.id ASC"
+                        , Address.class)
+                .setMaxResults(10)
+                .getResultList();
+        addresses.forEach(a -> System.out.printf("%s, %S - %d employees\n",
+                a.getText(), a.getTown().getName(), a.getEmployees().size()));
+
+        this.em.getTransaction().commit();
+    }
+
+    private void _08_GetEmployeeWithProject() {
+        Scanner scanner = new Scanner(System.in);
+        int employeeId = Integer.parseInt(scanner.nextLine());
+
+        this.em.getTransaction().begin();
+        Employee employee = this.em
+                .createQuery("FROM Employee as e " +
+                        "WHERE e.id=:employeeId", Employee.class)
+                .setParameter("employeeId", employeeId)
+                .getSingleResult();
+        System.out.printf("%s %s - %s\n",
+                employee.getFirstName(),
+                employee.getLastName(),
+                employee.getJobTitle());
+        this.em.getTransaction().commit();
+
+        this.em.getTransaction().begin();
+        List<Project> projects = this.em
+                .createQuery("FROM Project AS p " +
+                                "WHERE :employee MEMBER OF p.employees " +
+                                "ORDER BY p.name ASC",
+                        Project.class)
+                .setParameter("employee", employee)
+                .getResultList();
+        projects.forEach(p -> System.out.println("\t" + p.getName()));
+        this.em.getTransaction().commit();
+
+    }
+
+    private void _09_FindLatest10Projects() {
+        this.em.getTransaction().begin();
+        List<Project> last10Projects = this.em
+                .createQuery("FROM Project " +
+                                "ORDER BY startDate DESC, name",
+                        Project.class)
+                .setMaxResults(10)
+                .getResultList();
+        this.em.getTransaction().commit();
+
+        this.em.getTransaction().begin();
+        List<Project> projectsByName = this.em
+                .createQuery("FROM Project AS p " +
+                                 "WHERE p IN :last10Projects " +
+                                 "ORDER BY p.name ASC",
+                        Project.class)
+                .setParameter("last10Projects", last10Projects)
+                .getResultList();
+
+        this.em.getTransaction().commit();
+
+        projectsByName.forEach(p -> System.out.printf("Project name: %s\n" +
+                        " \tProject Description: %s\n" +
+                        " \tProject Start Date:%s\n" +
+                        " \tProject End Date: %s\n",
+                p.getName(),
+                p.getDescription(),
+                p.getStartDate(),
+                p.getEndDate()));
+
+    }
+
+    private void _10_getIncreaseSalaries() {
+        this.em.getTransaction().begin();
+        List<Employee> employees = this.em
+                .createQuery("FROM Employee AS e " +
+                                 "WHERE e.department.name='Engineering' OR " +
+                                 "e.department.name='Tool Design' OR " +
+                                 "e.department.name='Marketing' OR " +
+                                 "e.department.name='Information Services'",
+                        Employee.class)
+                .getResultList();
+
+        employees.forEach(e-> {
+            BigDecimal increaseMultiplier = new BigDecimal(1.12);
+            BigDecimal newSalary = e.getSalary().multiply(increaseMultiplier);
+            e.setSalary(newSalary);
+        });
+        this.em.getTransaction().commit();
+        employees.forEach(e-> System.out.printf("%s %s ($%.2f)\n",
+                e.getFirstName(), e.getLastName(), e.getSalary()));
+    }
 }
 
