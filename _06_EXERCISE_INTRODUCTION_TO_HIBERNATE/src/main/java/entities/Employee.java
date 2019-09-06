@@ -20,6 +20,21 @@ public class Employee {
     private Address address;
     private Set<Project> projects;
 
+    public Employee() {
+    }
+
+    public Employee(String firstName, String lastName, String middleName, String jobTitle, Department department, Employee manager, Timestamp hireDate, BigDecimal salary, Address address, Set<Project> projects) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.middleName = middleName;
+        this.jobTitle = jobTitle;
+        this.department = department;
+        this.manager = manager;
+        this.hireDate = hireDate;
+        this.salary = salary;
+        this.address = address;
+        this.projects = projects;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

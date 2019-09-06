@@ -11,6 +11,15 @@ public class Department {
     private Employee manager;
     private Set<Employee> employees;
 
+    public Department() {
+    }
+
+    public Department(String name, Employee manager, Set<Employee> employees) {
+        this.name = name;
+        this.manager = manager;
+        this.employees = employees;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "department_id")

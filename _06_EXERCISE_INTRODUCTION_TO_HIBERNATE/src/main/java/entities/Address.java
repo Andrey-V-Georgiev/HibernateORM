@@ -11,6 +11,15 @@ public class Address {
     private Town town;
     private Set<Employee> employees;
 
+    public Address() {
+    }
+
+    public Address( String text, Town town, Set<Employee> employees) {
+        this.text = text;
+        this.town = town;
+        this.employees = employees;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "address_id")

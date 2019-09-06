@@ -14,6 +14,17 @@ public class Project {
     private Timestamp endDate;
     private Set<Employee> employees;
 
+    public Project() {
+    }
+
+    public Project(String name, String description, Timestamp startDate, Timestamp endDate, Set<Employee> employees) {
+        this.name = name;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.employees = employees;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_id")

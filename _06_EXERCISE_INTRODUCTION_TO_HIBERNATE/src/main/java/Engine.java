@@ -17,22 +17,24 @@ class Engine implements Runnable {
 
     @Override
     public void run() {
-        //this._02_RemoveObjects();
-        //this._03_ContainsEmployee();
-        //this._04_EmployeesWithSalaryOver50000();
-        //this._05_EmployeesFromDepartment();
-        //this._06_AddAddressAndUpdateEmployee();
-        //this._07_AddressesWithEmployeeCount();
-        //this._08_GetEmployeeWithProject();
-        //this._09_FindLatest10Projects();
-        //this._10_getIncreaseSalaries();
+        this._02_RemoveObjects();
+//        this._03_ContainsEmployee();
+//        this._04_EmployeesWithSalaryOver50000();
+//        this._05_EmployeesFromDepartment();
+//        this._06_AddAddressAndUpdateEmployee();
+//        this._07_AddressesWithEmployeeCount();
+//        this._08_GetEmployeeWithProject();
+//        this._09_FindLatest10Projects();
+//        this._10_getIncreaseSalaries();
     }
 
 
     private void _02_RemoveObjects() {
         this.em.getTransaction().begin();
         List<Town> towns = this.em
-                .createQuery("FROM Town t WHERE LENGTH(t.name) > 5", Town.class)
+                .createQuery(new StringBuilder()
+                        .append("FROM Town t WHERE LENGTH(t.name) > 5")
+                        .toString(), Town.class)
                 .getResultList();
         towns.forEach(t -> this.em.detach(t));
         towns.forEach(t -> {
@@ -49,8 +51,11 @@ class Engine implements Runnable {
         this.em.getTransaction().begin();
         try {
             Employee employee = this.em
-                    .createQuery("FROM Employee WHERE CONCAT(firstName,' ',lastName)=:fullName",
-                            Employee.class)
+                    .createQuery(new StringBuilder()
+                                    .append("FROM Employee ")
+                                    .append("WHERE CONCAT(firstName,' ',lastName)=:fullName")
+                                    .toString()
+                            , Employee.class)
                     .setParameter("fullName", fullName)
                     .getSingleResult();
             System.out.println("Yes");
@@ -63,7 +68,11 @@ class Engine implements Runnable {
     private void _04_EmployeesWithSalaryOver50000() {
         this.em.getTransaction().begin();
         List<String> employeesFirstNames = this.em
-                .createQuery("SELECT e.firstName FROM Employee e WHERE e.salary > 50000", String.class)
+                .createQuery(new StringBuilder()
+                                .append("SELECT e.firstName ")
+                                .append("FROM Employee e ")
+                                .append("WHERE e.salary > 50000").toString()
+                        , String.class)
                 .getResultList();
         employeesFirstNames.forEach(System.out::println);
         this.em.getTransaction().commit();
@@ -72,9 +81,10 @@ class Engine implements Runnable {
     private void _05_EmployeesFromDepartment() {
         this.em.getTransaction().begin();
         List<Employee> employees = this.em
-                .createQuery("FROM Employee AS e " +
-                                "WHERE e.department.name ='Research and Development' " +
-                                "ORDER BY e.salary, e.id",
+                .createQuery(new StringBuilder()
+                                .append("FROM Employee AS e ")
+                                .append("WHERE e.department.name ='Research and Development' ")
+                                .append("ORDER BY e.salary, e.id").toString(),
                         Employee.class)
                 .getResultList();
         employees.forEach(e -> System.out.printf("%s %s from %s - $%.2f\n",
@@ -88,7 +98,9 @@ class Engine implements Runnable {
 
         this.em.getTransaction().begin();
         Town town = this.em
-                .createQuery("FROM Town WHERE id=32", Town.class)
+                .createQuery(new StringBuilder()
+                        .append("FROM Town WHERE id=32")
+                        .toString(), Town.class)
                 .getSingleResult();
         Address address = new Address();
         address.setText("Vitoshka 16");
@@ -99,7 +111,9 @@ class Engine implements Runnable {
         this.em.getTransaction().begin();
         try {
             Employee employee = this.em
-                    .createQuery("FROM Employee WHERE lastName=:lastName", Employee.class)
+                    .createQuery(new StringBuilder()
+                            .append("FROM Employee WHERE lastName=:lastName")
+                            .toString(), Employee.class)
                     .setParameter("lastName", lastName)
                     .getSingleResult();
             employee.setAddress(address);
@@ -114,8 +128,10 @@ class Engine implements Runnable {
     private void _07_AddressesWithEmployeeCount() {
         this.em.getTransaction().begin();
         List<Address> addresses = this.em
-                .createQuery("FROM Address AS a " +
-                                "ORDER BY SIZE(a.employees) DESC, a.town.id ASC"
+                .createQuery(new StringBuilder()
+                                .append("FROM Address AS a ")
+                                .append("ORDER BY SIZE(a.employees) DESC, a.town.id ASC")
+                                .toString()
                         , Address.class)
                 .setMaxResults(10)
                 .getResultList();
@@ -131,8 +147,11 @@ class Engine implements Runnable {
 
         this.em.getTransaction().begin();
         Employee employee = this.em
-                .createQuery("FROM Employee as e " +
-                        "WHERE e.id=:employeeId", Employee.class)
+                .createQuery(new StringBuilder()
+                                .append("FROM Employee as e ")
+                                .append("WHERE e.id=:employeeId")
+                                .toString()
+                        , Employee.class)
                 .setParameter("employeeId", employeeId)
                 .getSingleResult();
         System.out.printf("%s %s - %s\n",
@@ -143,10 +162,12 @@ class Engine implements Runnable {
 
         this.em.getTransaction().begin();
         List<Project> projects = this.em
-                .createQuery("FROM Project AS p " +
-                                "WHERE :employee MEMBER OF p.employees " +
-                                "ORDER BY p.name ASC",
-                        Project.class)
+                .createQuery(new StringBuilder()
+                                .append("FROM Project AS p ")
+                                .append("WHERE :employee MEMBER OF p.employees ")
+                                .append("ORDER BY p.name ASC")
+                                .toString()
+                        , Project.class)
                 .setParameter("employee", employee)
                 .getResultList();
         projects.forEach(p -> System.out.println("\t" + p.getName()));
@@ -157,19 +178,23 @@ class Engine implements Runnable {
     private void _09_FindLatest10Projects() {
         this.em.getTransaction().begin();
         List<Project> last10Projects = this.em
-                .createQuery("FROM Project " +
-                                "ORDER BY startDate DESC, name",
-                        Project.class)
+                .createQuery(new StringBuilder()
+                                .append("FROM Project ")
+                                .append("ORDER BY startDate DESC, name")
+                                .toString()
+                        , Project.class)
                 .setMaxResults(10)
                 .getResultList();
         this.em.getTransaction().commit();
 
         this.em.getTransaction().begin();
         List<Project> projectsByName = this.em
-                .createQuery("FROM Project AS p " +
-                                 "WHERE p IN :last10Projects " +
-                                 "ORDER BY p.name ASC",
-                        Project.class)
+                .createQuery(new StringBuilder()
+                                .append("FROM Project AS p ")
+                                .append("WHERE p IN :last10Projects ")
+                                .append("ORDER BY p.name ASC")
+                                .toString()
+                        , Project.class)
                 .setParameter("last10Projects", last10Projects)
                 .getResultList();
 
@@ -189,22 +214,25 @@ class Engine implements Runnable {
     private void _10_getIncreaseSalaries() {
         this.em.getTransaction().begin();
         List<Employee> employees = this.em
-                .createQuery("FROM Employee AS e " +
-                                 "WHERE e.department.name='Engineering' OR " +
-                                 "e.department.name='Tool Design' OR " +
-                                 "e.department.name='Marketing' OR " +
-                                 "e.department.name='Information Services'",
-                        Employee.class)
+                .createQuery(new StringBuilder()
+                                .append("FROM Employee AS e ")
+                                .append("WHERE e.department.name='Engineering' OR ")
+                                .append("e.department.name='Tool Design' OR ")
+                                .append("e.department.name='Marketing' OR ")
+                                .append("e.department.name='Information Services'")
+                                .toString()
+                        , Employee.class)
                 .getResultList();
 
-        employees.forEach(e-> {
+        employees.forEach(e -> {
             BigDecimal increaseMultiplier = new BigDecimal(1.12);
             BigDecimal newSalary = e.getSalary().multiply(increaseMultiplier);
             e.setSalary(newSalary);
         });
         this.em.getTransaction().commit();
-        employees.forEach(e-> System.out.printf("%s %s ($%.2f)\n",
+        employees.forEach(e -> System.out.printf("%s %s ($%.2f)\n",
                 e.getFirstName(), e.getLastName(), e.getSalary()));
     }
+
 }
 

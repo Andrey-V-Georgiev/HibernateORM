@@ -8,6 +8,13 @@ public class Town {
     private Integer id;
     private String name;
 
+    public Town() {
+    }
+
+    public Town(String name) {
+        this.name = name;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "town_id")

@@ -6,6 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="shampoo_company" />
         <module name="_07_HIBERNATE_CODE_FIRST" />
       </profile>
     </annotationProcessing>
