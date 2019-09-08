@@ -1,20 +1,24 @@
 package entities;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+
+@MappedSuperclass
 public abstract class BaseEntity {
-    private int id;
+    private Integer id;
 
     public BaseEntity() {
     }
 
-    public BaseEntity(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 }

@@ -1,24 +1,22 @@
 package entities;
 
-import java.util.Date;
+import javax.persistence.*;
+import java.time.LocalDate;
 
-public class Sale extends BaseEntity{
+@Entity
+@Table(name = "sales")
+public class Sale extends BaseEntity {
+
     private Product product;
     private Customer customer;
     private StoreLocation storeLocation;
-    private Date date;
+    private LocalDate date;
 
     public Sale() {
     }
 
-    public Sale(int id, Product product, Customer customer, StoreLocation storeLocation, Date date) {
-        super(id);
-        this.product = product;
-        this.customer = customer;
-        this.storeLocation = storeLocation;
-        this.date = date;
-    }
-
+    @ManyToOne(targetEntity = Product.class)
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
     public Product getProduct() {
         return product;
     }
@@ -27,6 +25,8 @@ public class Sale extends BaseEntity{
         this.product = product;
     }
 
+    @ManyToOne(targetEntity = Customer.class)
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
     public Customer getCustomer() {
         return customer;
     }
@@ -35,6 +35,8 @@ public class Sale extends BaseEntity{
         this.customer = customer;
     }
 
+    @ManyToOne(targetEntity = StoreLocation.class)
+    @JoinColumn(name = "store_location_id", referencedColumnName = "id")
     public StoreLocation getStoreLocation() {
         return storeLocation;
     }
@@ -43,11 +45,12 @@ public class Sale extends BaseEntity{
         this.storeLocation = storeLocation;
     }
 
-    public Date getDate() {
+    @Column(name="date")
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 }

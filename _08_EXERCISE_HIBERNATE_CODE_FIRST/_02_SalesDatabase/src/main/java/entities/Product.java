@@ -1,9 +1,13 @@
 package entities;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Set;
 
+@Entity
+@Table(name = "products")
 public class Product extends BaseEntity{
+
     private String name;
     private Double quantity;
     private BigDecimal price;
@@ -12,14 +16,7 @@ public class Product extends BaseEntity{
     public Product() {
     }
 
-    public Product(int id, String name, Double quantity, BigDecimal price, Set<Sale> sales) {
-        super(id);
-        this.name = name;
-        this.quantity = quantity;
-        this.price = price;
-        this.sales = sales;
-    }
-
+    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -28,6 +25,7 @@ public class Product extends BaseEntity{
         this.name = name;
     }
 
+    @Column(name = "quantity")
     public Double getQuantity() {
         return quantity;
     }
@@ -36,6 +34,7 @@ public class Product extends BaseEntity{
         this.quantity = quantity;
     }
 
+    @Column(name = "price")
     public BigDecimal getPrice() {
         return price;
     }
@@ -44,6 +43,7 @@ public class Product extends BaseEntity{
         this.price = price;
     }
 
+    @OneToMany(targetEntity = Sale.class, mappedBy = "product")
     public Set<Sale> getSales() {
         return sales;
     }

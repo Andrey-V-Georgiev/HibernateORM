@@ -1,24 +1,24 @@
 package entities;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.Set;
 
+@Entity
+@Table(name = "customers")
 public class Customer extends BaseEntity{
+
     private String name;
     private String email;
-    private String creditCardNumber;
+    private String credit_card_number;
     private Set<Sale> sales;
 
     public Customer() {
     }
 
-    public Customer(int id, String name, String email, String creditCardNumber, Set<Sale> sales) {
-        super(id);
-        this.name = name;
-        this.email = email;
-        this.creditCardNumber = creditCardNumber;
-        this.sales = sales;
-    }
-
+    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -27,6 +27,7 @@ public class Customer extends BaseEntity{
         this.name = name;
     }
 
+    @Column(name = "email")
     public String getEmail() {
         return email;
     }
@@ -35,14 +36,16 @@ public class Customer extends BaseEntity{
         this.email = email;
     }
 
-    public String getCreditCardNumber() {
-        return creditCardNumber;
+    @Column(name = "credit_card_number")
+    public String getCredit_card_number() {
+        return credit_card_number;
     }
 
-    public void setCreditCardNumber(String creditCardNumber) {
-        this.creditCardNumber = creditCardNumber;
+    public void setCredit_card_number(String credit_card_number) {
+        this.credit_card_number = credit_card_number;
     }
 
+    @OneToMany(targetEntity = Sale.class, mappedBy = "customer")
     public Set<Sale> getSales() {
         return sales;
     }

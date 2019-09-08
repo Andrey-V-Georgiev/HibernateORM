@@ -4,7 +4,8 @@ import javax.persistence.Persistence;
 
 public class App {
     public static void main(String[] args) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("sales_database");
-        EntityManager em = emf.createEntityManager();
+        EntityManagerFactory emFactory = Persistence.createEntityManagerFactory("sales_db");
+        EntityManager em = emFactory.createEntityManager();
+
     }
 }

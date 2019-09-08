@@ -1,20 +1,22 @@
 package entities;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.Set;
 
-public class StoreLocation extends BaseEntity{
+@Entity
+@Table(name = "store_locations")
+public class StoreLocation extends BaseEntity {
+
     private String locationName;
     private Set<Sale> sales;
 
     public StoreLocation() {
     }
 
-    public StoreLocation(int id, String locationName, Set<Sale> sales) {
-        super(id);
-        this.locationName = locationName;
-        this.sales = sales;
-    }
-
+    @Column(name="location_name")
     public String getLocationName() {
         return locationName;
     }
@@ -23,6 +25,7 @@ public class StoreLocation extends BaseEntity{
         this.locationName = locationName;
     }
 
+    @OneToMany(targetEntity = Sale.class, mappedBy = "storeLocation")
     public Set<Sale> getSales() {
         return sales;
     }
