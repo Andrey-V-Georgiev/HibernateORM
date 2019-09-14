@@ -1,6 +1,7 @@
 package ex_spring_data_intro.bookshop_system.util;
 
 import ex_spring_data_intro.bookshop_system.repositories.BookRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.StringJoiner;
@@ -9,6 +10,7 @@ import java.util.StringJoiner;
 public class TitleUtil {
     private final BookRepository bookRepository;
 
+    @Autowired
     public TitleUtil(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }

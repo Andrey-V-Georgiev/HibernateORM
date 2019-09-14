@@ -2,7 +2,6 @@ package ex_spring_data_intro.bookshop_system.entities;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 

@@ -6,11 +6,13 @@ import ex_spring_data_intro.bookshop_system.services.interfaces.BookService;
 import ex_spring_data_intro.bookshop_system.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.text.ParseException;
 
 @Service
+@Transactional
 public class BookServiceImpl implements BookService {
 
     private static final String BOOKS_FILE_PATH =
@@ -24,9 +26,10 @@ public class BookServiceImpl implements BookService {
     private final PriceUtil priceUtil;
     private final AgeRegistrationUtil ageRegistrationUtil;
     private final TitleUtil titleUtil;
+    private final CategoryUtil categoryUtil;
 
     @Autowired
-    public BookServiceImpl(BookRepository bookRepository, FileUtil fileUtil, AuthorsUtil authorsUtil, EditionTypeUtil editionTypeUtil, ReleaseDateUtil releaseDateUtil, CopiesUtil copiesUtil, PriceUtil priceUtil, AgeRegistrationUtil ageRegistrationUtil, TitleUtil titleUtil) {
+    public BookServiceImpl(BookRepository bookRepository, FileUtil fileUtil, AuthorsUtil authorsUtil, EditionTypeUtil editionTypeUtil, ReleaseDateUtil releaseDateUtil, CopiesUtil copiesUtil, PriceUtil priceUtil, AgeRegistrationUtil ageRegistrationUtil, TitleUtil titleUtil, CategoryUtil categoryUtil) {
         this.bookRepository = bookRepository;
         this.fileUtil = fileUtil;
         this.authorsUtil = authorsUtil;
@@ -36,6 +39,7 @@ public class BookServiceImpl implements BookService {
         this.priceUtil = priceUtil;
         this.ageRegistrationUtil = ageRegistrationUtil;
         this.titleUtil = titleUtil;
+        this.categoryUtil = categoryUtil;
     }
 
     @Override
@@ -57,8 +61,9 @@ public class BookServiceImpl implements BookService {
             book.setPrice(this.priceUtil.setPrice(args[3]));
             book.setAgeRestriction(this.ageRegistrationUtil.setAgeRestriction(args[4]));
             book.setTitle(this.titleUtil.setTitle(args));
+            book.setCategories(this.categoryUtil.randomSetOfCategories());
 
-            this.bookRepository.save(book);
+            this.bookRepository.saveAndFlush(book);
         }
     }
 }

@@ -9,7 +9,7 @@ import java.util.Date;
 public class ReleaseDateUtil {
     public Date setReleaseDay(String arg_1) throws ParseException {
 
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("d/M/yyyy");
         Date date = formatter.parse(arg_1);
         System.out.println(date + "\n");
         return date;

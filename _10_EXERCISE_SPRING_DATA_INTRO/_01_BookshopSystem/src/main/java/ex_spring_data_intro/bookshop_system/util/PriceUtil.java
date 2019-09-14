@@ -2,7 +2,6 @@ package ex_spring_data_intro.bookshop_system.util;
 
 import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Component
 public class PriceUtil {
