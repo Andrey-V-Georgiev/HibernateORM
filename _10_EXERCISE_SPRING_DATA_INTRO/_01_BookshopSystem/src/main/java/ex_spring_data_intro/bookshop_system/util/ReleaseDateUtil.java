@@ -11,7 +11,7 @@ public class ReleaseDateUtil {
 
         SimpleDateFormat formatter = new SimpleDateFormat("d/M/yyyy");
         Date date = formatter.parse(arg_1);
-        System.out.println(date + "\n");
+
         return date;
     }
 }

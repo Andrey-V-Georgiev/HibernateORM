@@ -1,6 +1,7 @@
 package ex_spring_data_intro.bookshop_system.services.impl;
 
 import ex_spring_data_intro.bookshop_system.entities.Book;
+import ex_spring_data_intro.bookshop_system.repositories.AuthorRepository;
 import ex_spring_data_intro.bookshop_system.repositories.BookRepository;
 import ex_spring_data_intro.bookshop_system.services.interfaces.BookService;
 import ex_spring_data_intro.bookshop_system.util.*;
@@ -10,6 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -44,7 +49,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void seedBooks() throws IOException, ParseException {
-        if(this.bookRepository.count() != 0) {
+        if (this.bookRepository.count() != 0) {
             return;
         }
 
@@ -65,5 +70,18 @@ public class BookServiceImpl implements BookService {
 
             this.bookRepository.saveAndFlush(book);
         }
+    }
+
+    @Override
+    public List<String> findAllTitles() throws ParseException {
+
+        SimpleDateFormat formatter = new SimpleDateFormat("d/M/yyyy");
+        Date date = formatter.parse("31/12/2000");
+
+        return this.bookRepository
+                .findAllByReleaseDateAfter(date)
+                .stream()
+                .map(Book::getTitle)
+                .collect(Collectors.toList());
     }
 }
