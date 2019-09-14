@@ -3,6 +3,7 @@ package ex_spring_data_intro.bookshop_system.entities;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -14,7 +15,7 @@ public class Book extends BaseEntity {
     private EditionType editionType;
     private BigDecimal price;
     private Integer copies;
-    private LocalDate releaseDate;
+    private Date releaseDate;
     private AgeRestriction ageRestriction;
     private Author author;
     private Set<Category> categories;
@@ -69,11 +70,11 @@ public class Book extends BaseEntity {
     }
 
     @Column(name = "release_date")
-    public LocalDate getReleaseDate() {
+    public Date getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(LocalDate releaseDate) {
+    public void setReleaseDate(Date releaseDate) {
         this.releaseDate = releaseDate;
     }
 

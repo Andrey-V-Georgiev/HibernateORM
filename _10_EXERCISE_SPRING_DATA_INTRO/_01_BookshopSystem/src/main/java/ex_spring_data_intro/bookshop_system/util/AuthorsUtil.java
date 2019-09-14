@@ -18,9 +18,13 @@ public class AuthorsUtil {
 
     public Author randomAuthor() {
         List<Author> authors = this.authorRepository.findAll();
-        Random random = new Random(1);
-        Integer randomId = random.nextInt(authors.size());
+        Integer randomId = getRandomNumberInRange(authors.size());
         Optional<Author> a = this.authorRepository.findById(randomId);
         return a.get();
+    }
+
+    private static int getRandomNumberInRange(int max) {
+        Random r = new Random();
+        return r.nextInt((max - 1) + 1) + 1;
     }
 }

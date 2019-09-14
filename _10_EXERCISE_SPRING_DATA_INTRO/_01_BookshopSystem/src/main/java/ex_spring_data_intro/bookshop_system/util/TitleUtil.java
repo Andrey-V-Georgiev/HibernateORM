@@ -1,10 +1,9 @@
 package ex_spring_data_intro.bookshop_system.util;
 
-import ex_spring_data_intro.bookshop_system.entities.Book;
 import ex_spring_data_intro.bookshop_system.repositories.BookRepository;
 import org.springframework.stereotype.Component;
-import java.util.Optional;
-import java.util.Random;
+
+import java.util.StringJoiner;
 
 @Component
 public class TitleUtil {
@@ -14,10 +13,15 @@ public class TitleUtil {
         this.bookRepository = bookRepository;
     }
 
-    public String randomTitle() {
-        int booksCount = (int) this.bookRepository.count();
-        Random random = new Random(1);
-        Optional<Book> book = this.bookRepository.findById(random.nextInt(booksCount));
-        return book.get().getTitle();
+    public String setTitle(String[] args) {
+
+            StringJoiner sj = new StringJoiner(" ");
+            for (int i = 5; i < args.length; i++) {
+                sj.add(args[i]);
+            }
+            String title = sj.toString();
+            System.out.println(title);
+
+        return title;
     }
 }

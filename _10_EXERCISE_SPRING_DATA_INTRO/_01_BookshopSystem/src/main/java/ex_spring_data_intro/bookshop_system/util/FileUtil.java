@@ -7,8 +7,6 @@ import java.util.List;
 
 @Component
 public class FileUtil {
-    //return list of all lines (without the blank lines)
-
     public String[] fileContent(String path) throws IOException {
 
         File file = new File(path);
